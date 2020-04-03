@@ -1,0 +1,118 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: rgb(118, 189, 248);
+    font-family: Helvetica, sans-serif;
+}
+
+:root {
+    --sombraPadrao: 1px 5px 5px rgb(0, 0, 0, 0.2)
+}
+
+input,
+button {
+    border: none;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    height: 100vh;
+}
+
+#cronometro-container {
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+#cronometro-container h1 {
+    color: white;
+    font-size: 3rem;
+}
+
+#cronometro-container input {
+    height: 80px;
+    width: 300px;
+    margin-top: 25px;
+    border-radius: 4px;
+    box-shadow: var(--sombraPadrao);
+    font-size: 3rem;
+    text-align: center;
+}
+
+#cronometro-container button {
+    margin-top: 20px;
+    height: 45px;
+    width: 200px;
+    border-radius: 100px;
+    background-color: rgb(45, 146, 230);
+    box-shadow: 0px 4px 0px rgba(0, 0, 0, 0.459);
+    transition: box-shadow linear .1s;
+    color: white;
+    cursor: pointer;
+}
+
+#cronometro-container .botoes-container button:disabled {
+    cursor: not-allowed;
+}
+#cronometro-container .botoes-container button:focus {
+    transition: box-shadow linear .1s;
+    box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.459);
+}
+
+#cronometro-container .botoes-container button.parar {
+    background-color: red;
+    box-shadow: 0px 2px 0px rgba(121, 7, 7, 0.966);
+}
+
+#cronometro-container .botoes-container button.small {
+    width: 100px;
+    transition: .3s linear width;
+}
+
+#cronometro-container .botoes-container #resetar {
+    display: none;
+    opacity: 0;
+}
+
+#cronometro-container .botoes-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+#cronometro-container .botoes-container #resetar.visivel {
+    width: 100px;
+    display: block;
+    opacity: 1;
+    transition: opacity 1s linear;
+    background-color: #333;
+}
+
+#cronometro-container .aviso-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: var(--sombraPadrao);
+    margin-top: 20px;
+    width: 100%;
+    min-height: 40px;
+    font-size: 14px;
+    color: #333;
+    opacity: 0;
+    transition: opacity linear .4s;
+}
+
+#cronometro-container .aviso-container.visivel {
+    opacity: 1;
+    transition: opacity linear .4s;
+}

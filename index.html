@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo app</title>
+</head>
+<script src="./sw.js"></script>
+<script defer src="./app.js"></script>
+<link rel="stylesheet" href="./app.css">
+
+<body>
+    <!-- a ideia é fazer um CRONOMETRO -->
+    <div class="container">
+        <div id="cronometro-container">
+            <h1>Cronômetro</h1>
+            <input maxlength="5" value="" type="text" placeholder="12:00" />
+            <div class="botoes-container">
+                <button id="iniciar">Iniciar</button>
+                <button id="resetar" class="small">Resetar</button>
+            </div>
+            <div class="aviso-container">
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
