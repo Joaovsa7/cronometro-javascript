@@ -8,14 +8,14 @@ const eventoContagemParada = new Event('contagemPausada');
 const UM_SEGUNDO = 1000;
 
 const state = {
-    minutos: null,
-    segundos: null,
+    minutos: undefined,
+    segundos: undefined,
     contando: false,
 }
 
 function resetarEstado() {
-    state.minutos = null;
-    state.segundos = null;
+    state.minutos = undefined;
+    state.segundos = undefined;
     state.contando = false;
     return state;
 }
@@ -32,6 +32,7 @@ async function avisaQueChegouAoFim() {
 function cronometraSegundos(state) {
     const appState = state;
     const contador = setInterval(() => {
+        localStorage.setItem('state', JSON.stringify(state));
         if (!state.contando) return clearInterval(contador);
         if (appState.segundos === 0) {
             $botaoResetar.classList.remove('visivel');
@@ -52,6 +53,7 @@ function cronometraSegundos(state) {
 function cronometraMinutosEsegundos(state) {
     const appState = state;
     const contador = setInterval(() => {
+        localStorage.setItem('state', JSON.stringify(state));
         if (!state.contando) {
             return clearInterval(contador);
         }
@@ -98,6 +100,10 @@ function atualizaValor(value) {
     $input.value = value;
 }
 
+function iniciaCronometroComOenter({ key, keyCode }) {
+    if (key === "Enter" || keyCode === 13) return iniciaCronometro();
+}
+
 function iniciaCronometro() {
     if (state.contando) {
         state.contando = false;
@@ -111,8 +117,7 @@ function iniciaCronometro() {
     };
 
     document.dispatchEvent(eventoContagemIniciada);
-
-    const POSSUI_MINUTOS = state.minutos != null && state.minutos > 0;
+    const POSSUI_MINUTOS = state.minutos != undefined && state.minutos > 0;
 
     if (POSSUI_MINUTOS) {
         return cronometraMinutosEsegundos(state);
@@ -129,15 +134,16 @@ function manipulaMudancas({ target }) {
 function manipulaDesfoque({ target }) {
     const value = target.value;
     if (!value) return;
-    const regex = /(?<minutos>.+\d).(?<segundos>.+)|(?<apenasSegundos>.+)/;
-    const { groups } = value.match(regex);
-    const { minutos, segundos, apenasSegundos } = groups;
-    if (minutos && segundos) {
-        state.minutos = parseInt(minutos);
-        state.segundos = parseInt(segundos);
+    const regex = /\D/;
+    const [primeiroValor, segundoValor] = value.split(regex);
+    const minutosEsegunos = segundoValor != undefined;
+    if (minutosEsegunos) {
+        state.minutos = parseInt(primeiroValor);
+        state.segundos = parseInt(segundoValor);
         return;
     }
-    state.segundos = parseInt(apenasSegundos);
+
+    state.segundos = parseInt(primeiroValor);
 }
 
 function iniciarContagem() {
@@ -156,9 +162,24 @@ function pararContagem() {
     $botaoIniciar.classList.remove('parar');
 }
 
+function pegaEstadoNoLocalStorage() {
+    const estadoNoLocalStorage = JSON.parse(localStorage.getItem('state'));
+    if (!estadoNoLocalStorage) {
+        return false;
+    }
+    const { minutos, segundos } = estadoNoLocalStorage;
+    state.minutos = minutos;
+    state.segundos = segundos;
+    const possuiMinutos = minutos ? `${minutos}:` : '';
+    const possuiSegundos = segundos ? segundos : '';
+    return atualizaValor(`${possuiMinutos}${possuiSegundos}`)
+}
+
 $input.addEventListener('blur', manipulaDesfoque);
 $input.addEventListener('input', manipulaMudancas);
+$input.addEventListener('keydown', iniciaCronometroComOenter);
 $botaoIniciar.addEventListener('click', iniciaCronometro);
 $botaoResetar.addEventListener('click', resetaEstado);
 document.addEventListener('contagemIniciada', iniciarContagem);
 document.addEventListener('contagemPausada', pararContagem);
+document.addEventListener('DOMContentLoaded', pegaEstadoNoLocalStorage)
